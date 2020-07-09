@@ -1,0 +1,23 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t reactdev -f Dockerfile.dev .
+
+script:
+    - docker run -e CI=true reactdev npm run test
+
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $ACCESS_KEY_ID
+  secret_access_key:
+    secure: "$SECRETE_ACCESS_KEY"
+  region: "us-east-1"
+  app: "docker-react-test"
+  env: "DockerReactTest-env"
+  bucket_name: "elasticbeanstalk-us-east-1-550425460584"
+  bucket_path: "docker-react-test"
+  on:
+    branch: master
